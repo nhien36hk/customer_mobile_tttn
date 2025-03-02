@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:gotta_go/constants/constant.dart';
 import 'package:gotta_go/models/ticket_model.dart';
@@ -135,7 +137,9 @@ class _SeatDetailScreenState extends State<SeatDetailScreen> {
                                 color:
                                     isBooked ? Colors.blue[100] : Colors.white,
                                 border: Border.all(
-                                  color: Colors.green,
+                                  color: isBooked
+                                      ? Colors.green
+                                      : Colors.green.shade200,
                                   width: 2,
                                 ),
                                 borderRadius: BorderRadius.circular(10),
@@ -143,10 +147,12 @@ class _SeatDetailScreenState extends State<SeatDetailScreen> {
                               child: Center(
                                 child: Text(
                                   seat,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: isBooked
+                                          ? Colors.black
+                                          : Colors.grey[300]),
                                 ),
                               ),
                             ),
@@ -175,7 +181,9 @@ class _SeatDetailScreenState extends State<SeatDetailScreen> {
                                 color:
                                     isBooked ? Colors.blue[100] : Colors.white,
                                 border: Border.all(
-                                  color: Colors.green,
+                                  color: !isBooked
+                                      ? Colors.green.shade200
+                                      : Colors.green,
                                   width: 2,
                                 ),
                                 borderRadius: BorderRadius.circular(10),
@@ -183,10 +191,12 @@ class _SeatDetailScreenState extends State<SeatDetailScreen> {
                               child: Center(
                                 child: Text(
                                   seat,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: isBooked
+                                          ? Colors.black
+                                          : Colors.grey[300]),
                                 ),
                               ),
                             ),

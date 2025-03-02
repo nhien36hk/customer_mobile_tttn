@@ -1,11 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:gotta_go/constants/constant.dart';
 import 'package:gotta_go/models/ticket_model.dart';
 import 'package:gotta_go/screens/seat_detail_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
-class TicketDetailScreen extends StatelessWidget {
+class TicketDetailScreen extends StatefulWidget {
   final TicketModel ticketModel;
 
   const TicketDetailScreen({
@@ -13,9 +16,24 @@ class TicketDetailScreen extends StatelessWidget {
     required this.ticketModel,
   });
 
+  @override
+  State<TicketDetailScreen> createState() => _TicketDetailScreenState();
+}
+
+class _TicketDetailScreenState extends State<TicketDetailScreen> {
   String formatDateTime(String dateTimeStr) {
     DateTime dateTime = DateTime.parse(dateTimeStr);
     return DateFormat('dd/MM/yyyy - HH:mm').format(dateTime);
+  }
+
+  String generateTicketQRData() {
+    Map<String, String> mapData = {
+      "ticketId": widget.ticketModel.ticketId!,
+      "scheduleId": widget.ticketModel.scheduleId,
+      "customerId": widget.ticketModel.customerId,
+      "routeId": widget.ticketModel.routeId,
+    };
+    return jsonEncode(mapData);
   }
 
   @override
@@ -78,7 +96,7 @@ class TicketDetailScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              ticketModel.scheduleId,
+                              widget.ticketModel.ticketId!,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
@@ -88,23 +106,6 @@ class TicketDetailScreen extends StatelessWidget {
                           ],
                         ),
                         const Spacer(),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.green[50],
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            ticketModel.status,
-                            style: const TextStyle(
-                              color: Colors.green,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -115,6 +116,7 @@ class TicketDetailScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,7 +129,7 @@ class TicketDetailScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 5),
                                 Text(
-                                  ticketModel.from,
+                                  widget.ticketModel.from,
                                   style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
@@ -150,7 +152,7 @@ class TicketDetailScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 5),
                                 Text(
-                                  ticketModel.to,
+                                  widget.ticketModel.to,
                                   style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
@@ -169,13 +171,13 @@ class TicketDetailScreen extends StatelessWidget {
                           children: [
                             _buildInfoColumn(
                               'Thời gian',
-                              formatDateTime(ticketModel.departureTime)
+                              formatDateTime(widget.ticketModel.departureTime)
                                   .split(' - ')[1],
                               Icons.access_time,
                             ),
                             _buildInfoColumn(
                               'Ngày',
-                              formatDateTime(ticketModel.departureTime)
+                              formatDateTime(widget.ticketModel.departureTime)
                                   .split(' - ')[0],
                               Icons.calendar_today,
                             ),
@@ -198,7 +200,7 @@ class TicketDetailScreen extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => SeatDetailScreen(
-                                          ticketModel: ticketModel),
+                                          ticketModel: widget.ticketModel),
                                     ),
                                   ),
                                   child: Container(
@@ -239,7 +241,7 @@ class TicketDetailScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 5),
                                 Text(
-                                  ticketModel.customerId,
+                                  widget.ticketModel.customerId,
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -249,6 +251,14 @@ class TicketDetailScreen extends StatelessWidget {
                             ),
                           ],
                         ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        QrImageView(
+                          data: generateTicketQRData(),
+                          size: 200,
+                          version: QrVersions.auto,
+                        )
                       ],
                     ),
                   ),
@@ -274,7 +284,7 @@ class TicketDetailScreen extends StatelessWidget {
                         ),
                         Text(
                           NumberFormat.currency(locale: 'vi_VN', symbol: 'đ')
-                              .format(ticketModel.price),
+                              .format(widget.ticketModel.price),
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

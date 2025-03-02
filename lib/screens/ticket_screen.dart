@@ -179,7 +179,8 @@ class _TicketScreenState extends State<TicketScreen> {
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               DocumentSnapshot itemDoc = snapshot.data!.docs[index];
-              TicketModel itemModel = TicketModel.fromSnapshot(itemDoc);
+
+              TicketModel itemModel = TicketModel.fromSnapshot(itemDoc, itemDoc.id);
 
               print("Floor 1 ${itemModel.floor1} Floor2 ${itemModel.floor2}");
 

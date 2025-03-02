@@ -15,6 +15,7 @@ class TicketModel {
   List<String> floor2;
   String status;
   String to;
+  String? ticketId;
 
   TicketModel({
     required this.arrivalTime,
@@ -31,9 +32,10 @@ class TicketModel {
     required this.seatLayoutId,
     required this.status,
     required this.to,
+    this.ticketId
   });
 
-  TicketModel.fromSnapshot(DocumentSnapshot snapshot)
+  TicketModel.fromSnapshot(DocumentSnapshot snapshot, String ticketId)
       : arrivalTime = snapshot['arrivalTime'],
         bookingTime = snapshot['bookingTime'],
         busId = snapshot['busId'],
@@ -49,5 +51,6 @@ class TicketModel {
         scheduleId = snapshot['scheduleId'],
         seatLayoutId = snapshot['seatLayoutId'],
         status = snapshot['status'],
+        ticketId = ticketId,
         to = snapshot['to'];
 }
