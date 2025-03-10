@@ -7,25 +7,26 @@ import 'package:gotta_go/models/schedule_model.dart';
 import 'package:gotta_go/models/seat_booking_model.dart';
 import 'package:gotta_go/screens/pay_method_screen.dart';
 import 'package:gotta_go/screens/seat_selection_screen.dart';
+import 'package:gotta_go/services/booking_services.dart';
 import 'package:gotta_go/widgets/loading_widget.dart';
 import 'package:gotta_go/widgets/method_pay_widget.dart';
 import 'package:intl/intl.dart';
 
-class TripDetailScreen extends StatefulWidget {
+class BookingInformation extends StatefulWidget {
   final ScheduleModel trip;
   final SeatBookingModel seatBookingModel;
 
-  const TripDetailScreen({
+  const BookingInformation({
     super.key,
     required this.trip,
     required this.seatBookingModel,
   });
 
   @override
-  State<TripDetailScreen> createState() => _TripDetailScreenState();
+  State<BookingInformation> createState() => _BookingInformationState();
 }
 
-class _TripDetailScreenState extends State<TripDetailScreen> {
+class _BookingInformationState extends State<BookingInformation> {
   @override
   void initState() {
     super.initState();
@@ -54,47 +55,6 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
     DateTime dateTime = DateTime.parse(widget.trip.departureTime).toLocal();
     String dateFormat = DateFormat("EEEE, dd/MM/yyyy • HH:mm").format(dateTime);
     return dateFormat;
-  }
-
-  void bookingTicket() async {
-    showDialog(
-      context: context,
-      builder: (context) => LoadingWidget(),
-    );
-
-    DocumentSnapshot documentSnapshot = await firebaseFirestore
-        .collection("seatLayouts")
-        .doc(widget.trip.seatLayoutId)
-        .get();
-    String scheduleId = documentSnapshot['scheduleId'];
-    Map<String, dynamic> ticketMap = {
-      "routeId": widget.trip.routeId,
-      "seatLayoutId": widget.trip.seatLayoutId,
-      "scheduleId": scheduleId,
-      "customerId": firebaseAuth.currentUser!.uid,
-      "busId": widget.trip.busId,
-      "seatNumber": {
-        "floor1": widget.seatBookingModel.selectSeatFloor1,
-        "floor2": widget.seatBookingModel.selectSeatFloor2,
-      },
-      "from": widget.trip.startLocation,
-      "to": widget.trip.endLocation,
-      "price": widget.seatBookingModel.totalPrice,
-      "status": "booking",
-      "departureTime": widget.trip.departureTime,
-      "arrivalTime": widget.trip.arrivalTime,
-      "bookingTime": DateTime.now()
-    };
-
-    await firebaseFirestore
-        .collection("tickets")
-        .doc(firebaseAuth.currentUser!.uid)
-        .collection("allTickets")
-        .doc()
-        .set(ticketMap);
-
-    Navigator.pop(context);
-    Fluttertoast.showToast(msg: "Đặt vé thành công");
   }
 
   @override
@@ -351,59 +311,13 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
           ],
         ),
         child: ElevatedButton(
-          onPressed: () async {
-            // Kiểm tra số ghế còn trống
-            if (widget.trip.emptySeats! > 0 && methodPay != null) {
-              bookingTicket();
-            } else {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Icon(
-                      Icons.info_outline_rounded,
-                      color: Colors.red,
-                      size: 40,
-                    ),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Vui lòng chọn phương thức thanh toán",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                    actions: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: Text(
-                              "Ok",
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 100, vertical: 15),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(35)),
-                              backgroundColor: Constants.backgroundColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  );
-                },
-              );
-            }
+          onPressed: () {
+            BookingServices.bookingTicket(
+              context,
+              widget.trip,
+              widget.seatBookingModel,
+              methodPay,
+            );
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Constants.backgroundColor,
@@ -413,7 +327,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
             ),
           ),
           child: Text(
-            widget.trip.emptySeats! > 0 ? 'Đặt vé' : 'Hết chỗ',
+            'Đặt vé',
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,

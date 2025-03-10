@@ -85,55 +85,48 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       onTap: () {
         FocusScope.of(context).unfocus();
       },
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: Colors.grey[200],
-          appBar: AppBar(
-            backgroundColor: Colors.black,
-            title: Text(
-              "Thông tin tài khoản",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-              ),
+      child: Scaffold(
+        backgroundColor: const Color(0xFFEEF2FD),
+        appBar: AppBar(
+          backgroundColor: Constants.backgroundColor,
+          title: Text(
+            "Thông tin tài khoản",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
             ),
-            leading: IconButton(
-              onPressed: () => Navigator.pop(context),
-              icon: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white,
-              ),
+          ),
+          leading: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
             ),
-            centerTitle: true,
           ),
-          bottomNavigationBar: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  updateUser();
-                },
-                child: Text(
-                  "Cập nhật",
-                  style: TextStyle(color: Colors.white),
-                ),
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 70, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  backgroundColor: Colors.black,
-                ),
+          centerTitle: true,
+        ),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: ElevatedButton(
+            onPressed: updateUser,
+            child: Text(
+              "Cập nhật",
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+            style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.symmetric(horizontal: 70, vertical: 15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
               ),
-              SizedBox(height: 15),
-            ],
+              backgroundColor: Constants.backgroundColor,
+            ),
           ),
-          body: SingleChildScrollView(
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
-                SizedBox(
-                  height: 20,
-                ),
                 Center(
                   child: Column(
                     children: [
@@ -145,114 +138,105 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               title: Text(
                                 'Chọn ảnh từ',
                                 style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
-                              content: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    GestureDetector(
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.camera_alt),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text('Máy ảnh'),
-                                        ],
-                                      ),
-                                      onTap: () {
-                                        updateAvatar(ImageSource.camera);
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                    Padding(padding: EdgeInsets.all(8.0)),
-                                    GestureDetector(
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.camera),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text('Thư viện'),
-                                        ],
-                                      ),
-                                      onTap: () {
-                                        updateAvatar(ImageSource.gallery);
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ],
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Constants.backgroundColor,
                                 ),
+                              ),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ListTile(
+                                    leading: Icon(Icons.camera_alt, color: Constants.backgroundColor),
+                                    title: Text('Máy ảnh'),
+                                    onTap: () {
+                                      updateAvatar(ImageSource.camera);
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  ListTile(
+                                    leading: Icon(Icons.photo_library, color: Constants.backgroundColor),
+                                    title: Text('Thư viện'),
+                                    onTap: () {
+                                      updateAvatar(ImageSource.gallery);
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
                               ),
                             ),
                           );
                         },
                         child: Container(
-                          padding: EdgeInsets.all(20),
+                          width: 100,
+                          height: 100,
                           decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(10),
+                            color: Constants.backgroundColor.withOpacity(0.1),
+                            shape: BoxShape.circle,
                           ),
                           child: Icon(
                             Icons.person,
-                            color: Colors.black,
-                            size: 30,
+                            color: Constants.backgroundColor,
+                            size: 50,
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      const SizedBox(height: 10),
                       Text(
                         userInfor?.name ?? "",
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Constants.backgroundColor,
+                        ),
                       ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(userInfor?.phone ?? ""),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    children: [
-                      LabelTextWidget(
-                        hintText: "Nhập số điện thoại",
-                        iconLabel: Icon(Icons.phone),
-                        labelText: "Số điện thoại",
-                        textController: phoneController,
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      LabelTextWidget(
-                        hintText: "Nhập họ tên",
-                        iconLabel: Icon(Icons.person),
-                        labelText: "Họ tên",
-                        textController: nameController,
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      LabelTextWidget(
-                        hintText: "Nhập email",
-                        iconLabel: Icon(Icons.email),
-                        labelText: "Email",
-                        textController: emailController,
-                      ),
-                      SizedBox(
-                        height: 5,
+                      const SizedBox(height: 5),
+                      Text(
+                        userInfor?.phone ?? "",
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                        ),
                       ),
                     ],
                   ),
-                )
+                ),
+                const SizedBox(height: 30),
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  elevation: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      children: [
+                        LabelTextWidget(
+                          hintText: "Nhập số điện thoại",
+                          iconLabel: Icon(Icons.phone, color: Constants.backgroundColor),
+                          labelText: "Số điện thoại",
+                          textController: phoneController,
+                        ),
+                        const SizedBox(height: 15),
+                        LabelTextWidget(
+                          hintText: "Nhập họ tên",
+                          iconLabel: Icon(Icons.person, color: Constants.backgroundColor),
+                          labelText: "Họ tên",
+                          textController: nameController,
+                        ),
+                        const SizedBox(height: 15),
+                        LabelTextWidget(
+                          hintText: "Nhập email",
+                          iconLabel: Icon(Icons.email, color: Constants.backgroundColor),
+                          labelText: "Email",
+                          textController: emailController,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -261,3 +245,4 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 }
+

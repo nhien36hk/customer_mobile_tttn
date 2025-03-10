@@ -225,8 +225,8 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
                         ),
                         itemCount: 12,
                         itemBuilder: (context, index) {
-                          String row = String.fromCharCode(65 + index ~/ 4);
-                          String Key = (index % 4 + 1).toString();
+                          String row = "A";
+                          String Key = "0${(index + 1).toString()}";
                           String seatKey = '$row$Key';
                           bool isSelected = selectedSeats1.contains(seatKey);
                           bool isExist = floor1[seatKey] != null;
@@ -313,8 +313,8 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
                         ),
                         itemCount: 12,
                         itemBuilder: (context, index) {
-                          String row = String.fromCharCode(65 + index ~/ 4);
-                          String Key = (index % 4 + 1).toString();
+                          String row = "B";
+                          String Key = "0${(index +1).toString()}";
                           String seatKey = '$row$Key';
                           bool isSelected = selectedSeats2.contains(seatKey);
                           bool isExist = floor2[seatKey] != null;
@@ -360,7 +360,9 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
                                         ? Colors.blue[100]
                                         : Colors.white,
                                 border: Border.all(
-                                  color: !isExist ? Colors.transparent : Colors.green,
+                                  color: !isExist
+                                      ? Colors.transparent
+                                      : Colors.green,
                                   width: 2,
                                 ),
                                 borderRadius: BorderRadius.circular(10),

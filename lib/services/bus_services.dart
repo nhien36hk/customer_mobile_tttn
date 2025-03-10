@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gotta_go/constants/global.dart';
+import 'package:gotta_go/models/route_model.dart';
 import 'package:gotta_go/models/schedule_model.dart';
 import 'package:gotta_go/screens/trip_list_screen.dart';
+import 'package:gotta_go/widgets/warning_widget.dart';
 import 'package:intl/intl.dart';
 
 class BusServices {
@@ -15,8 +17,8 @@ class BusServices {
       String selectedDateStr = DateFormat("yyyy-MM-dd").format(selectedDate!);
       QuerySnapshot querySnapshot = await firebaseFirestore
           .collection("routes")
-          .where('startPoint', isEqualTo: fromLocation)
-          .where('endPoint', isEqualTo: toLocation)
+          .where('from', isEqualTo: fromLocation)
+          .where('to', isEqualTo: toLocation)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
@@ -33,14 +35,16 @@ class BusServices {
           for (var scheduleDoc in querySchedule.docs) {
             // Chuyển đổi thời gian FormatDate và String giống nhau
             String departureTimeStr = scheduleDoc['departureTime'];
-            // DateTime departureTime = DateTime.parse(departureTimeStr).toLocal();
-             DateTime departureTime = DateTime.parse(departureTimeStr);
+            DateTime departureTime = DateTime.parse(departureTimeStr).toLocal();
+            //  DateTime departureTime = DateTime.parse(departureTimeStr);
             String departureFormat =
                 DateFormat("yyyy-MM-dd").format(departureTime);
 
-            print("selectedDate $selectedDate formatDate$departureFormat");
+            print(
+                "selectedDate $selectedDateStr formatDate$departureFormat lasttime$departureTimeStr");
 
             // Nếu thời gian lựa chọn và thời gian khởi hành cùng ngày
+            // So sánh ngày đã được format để đảm bảo cùng định dạng yyyy-MM-dd
             if (selectedDateStr == departureFormat) {
               String idSeatLayout =
                   scheduleDoc['seatLayoutId']; // Lấy id SeatLayout
@@ -61,12 +65,16 @@ class BusServices {
                     seatLayoutMap); // Đếm số ghế trống
                 // Chuyển đổi thành model
                 ScheduleModel itemSchedule = ScheduleModel.fromSnapshot(
-                    scheduleDoc, availableSeats, nameCar, fromLocation, toLocation);
+                    scheduleDoc,
+                    availableSeats,
+                    nameCar,
+                    fromLocation,
+                    toLocation);
                 listSchedules.add(itemSchedule); // Thêm từng model cùng ngày
               } else {
                 Fluttertoast.showToast(msg: "Seat Layout Null");
               }
-            }
+            } else {}
           }
 
           Navigator.pop(context);
@@ -85,6 +93,12 @@ class BusServices {
         }
       } else {
         Navigator.pop(context);
+        showDialog(
+          context: context,
+          builder: (context) => WarningWidget(
+              colorInfor: Colors.red,
+              textWarning: "Hiện tại không có chuyến nào trong ngày hôm đó"),
+        );
         Fluttertoast.showToast(msg: "Không có tuyến nào như vậy cả!");
       }
     } else {
@@ -114,5 +128,20 @@ class BusServices {
     );
     print("So ghe con trong" + countSeats.toString());
     return countSeats;
+  }
+
+  static Future<List<RouteModel>> popularTrip() async {
+    List<RouteModel> listPopular;
+    try {
+      QuerySnapshot querySnapshot =
+          await firebaseFirestore.collection("routes").get();
+      listPopular = querySnapshot.docs
+          .map((doc) => RouteModel.fromSnapshot(doc))
+          .toList();
+      return listPopular;
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Lỗi lấy route $e");
+    }
+    return [];
   }
 }

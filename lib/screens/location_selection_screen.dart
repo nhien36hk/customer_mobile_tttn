@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gotta_go/constants/constant.dart';
 import 'package:gotta_go/constants/global.dart';
+import 'package:http/http.dart' as http;
 
 class LocationSelectionScreen extends StatefulWidget {
   LocationSelectionScreen({super.key, required this.isForm});
@@ -15,20 +19,39 @@ class LocationSelectionScreen extends StatefulWidget {
 
 class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
   int _selectedTab = 0;
-  List<String> _startProvinces = [];
-  List<String> _endProvinces = [];
-
+  List<String> provinces = [];
+  bool isLoading = true;
+  List<String> predictProvices = [];
   Future<void> getProvince() async {
-    QuerySnapshot querySnapshot =
-        await firebaseFirestore.collection("routes").get();
-    setState(() {
-      _startProvinces = querySnapshot.docs.map((doc) {
-        return doc['startPoint'].toString();
-      }).toList();
+    try {
+      final result = await http
+          .get(Uri.parse("https://provinces.open-api.vn/api/?depth=2"));
+      if (result.statusCode == 200) {
+        // Decode response body với UTF-8
+        String decodedBody = utf8.decode(result.bodyBytes);
+        List<dynamic> data = jsonDecode(decodedBody);
 
-      _endProvinces = querySnapshot.docs.map((doc) {
-        return doc['endPoint'].toString();
-      }).toList();
+        setState(() {
+          provinces =
+              data.map((province) => province['name'].toString()).toList();
+
+          print("Tỉnh $provinces");
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      Fluttertoast.showToast(msg: "Lỗi gửi http tìm tỉnh $e");
+    }
+  }
+
+  searchProvince(String value) {
+    setState(() {
+      predictProvices = provinces
+          .where((provice) => provice.toLowerCase().contains(value.toLowerCase().trim()))
+          .toList();
     });
   }
 
@@ -36,11 +59,7 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    late();
-  }
-
-  void late() async {
-    await getProvince();
+    getProvince();
   }
 
   @override
@@ -72,6 +91,9 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
                   borderSide: BorderSide.none,
                 ),
               ),
+              onChanged: (value) {
+                searchProvince(value);
+              },
             ),
           ),
           Container(
@@ -84,20 +106,39 @@ class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
               ],
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(20),
-              itemCount: widget.isForm ? _startProvinces.length : _endProvinces.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(widget.isForm ? _startProvinces[index] : _endProvinces[index]),
-                  onTap: () {
-                    Navigator.pop(context, widget.isForm ? _startProvinces[index] : _endProvinces[index]);
-                  },
-                );
-              },
-            ),
-          ),
+          isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : predictProvices.length > 0
+                  ? Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(20),
+                        itemCount: predictProvices.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(predictProvices[index]),
+                            onTap: () {
+                              Navigator.pop(context, predictProvices[index]);
+                            },
+                          );
+                        },
+                      ),
+                    )
+                  : Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(20),
+                        itemCount: provinces.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(provinces[index]),
+                            onTap: () {
+                              Navigator.pop(context, provinces[index]);
+                            },
+                          );
+                        },
+                      ),
+                    )
         ],
       ),
     );

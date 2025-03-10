@@ -110,7 +110,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 20),
 
               // Menu items
-              _buildMenuItem(Icons.account_circle, 'Thông tin cá nhân'),
+              GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditProfileScreen(),
+                  ),
+                ),
+                child:
+                    _buildMenuItem(Icons.account_circle, 'Thông tin cá nhân'),
+              ),
               _buildMenuItem(Icons.notifications, 'Thông báo'),
               _buildMenuItem(Icons.payment, 'Phương thức thanh toán'),
               _buildMenuItem(Icons.security, 'Bảo mật'),
@@ -176,7 +185,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         leading: Icon(icon, color: Constants.backgroundColor),
         title: Text(title),
         trailing: const Icon(Icons.chevron_right),
-        onTap: () {},
       ),
     );
   }

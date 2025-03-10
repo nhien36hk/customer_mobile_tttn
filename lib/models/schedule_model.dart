@@ -4,13 +4,14 @@ class ScheduleModel {
   String arrivalTime;
   String busId;
   String departureTime;
-  int price;
+  String price;
   String routeId;
   String seatLayoutId;
   int? emptySeats;
   String nameCar;
   String startLocation;
   String endLocation;
+  String scheduleId;
 
   ScheduleModel({
     required this.arrivalTime,
@@ -22,6 +23,7 @@ class ScheduleModel {
     required this.nameCar,
     required this.startLocation,
     required this.endLocation,
+    required this.scheduleId,
     this.emptySeats,
   });
 
@@ -36,5 +38,6 @@ class ScheduleModel {
         startLocation = startLocation,
         endLocation = endLocation,
         emptySeats = emptySeats,
+        scheduleId = snapshot.id,
         nameCar = nameCar;
 }
