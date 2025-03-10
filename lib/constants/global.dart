@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:gotta_go/models/user_model.dart';
 import 'package:gotta_go/screens/home_screen.dart';
 import 'package:gotta_go/screens/notification_screen.dart';
-import 'package:gotta_go/screens/ticket_screen.dart';
+import 'package:gotta_go/screens/ticket_list_screen.dart';
 import 'package:gotta_go/screens/profile_screen.dart';
 
 FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -16,7 +16,7 @@ FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
 final pages = [
   const HomeScreen(),
-  const TicketScreen(),
+  const TicketListScreen(),
   const NotificationScreen(),
   const ProfileScreen(),
 ];

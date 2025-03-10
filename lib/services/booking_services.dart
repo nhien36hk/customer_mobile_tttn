@@ -5,8 +5,10 @@ import 'package:gotta_go/constants/constant.dart';
 import 'package:gotta_go/constants/global.dart';
 import 'package:gotta_go/models/schedule_model.dart';
 import 'package:gotta_go/models/seat_booking_model.dart';
+import 'package:gotta_go/screens/home_screen.dart';
+import 'package:gotta_go/screens/main_screen.dart';
 import 'package:gotta_go/screens/ticket_detail_screen.dart';
-import 'package:gotta_go/screens/ticket_screen.dart';
+import 'package:gotta_go/screens/ticket_list_screen.dart';
 import 'package:gotta_go/widgets/loading_widget.dart';
 
 class BookingServices {
@@ -49,10 +51,54 @@ class BookingServices {
       };
 
       await firebaseFirestore.collection("tickets").doc().set(ticketMap);
+      DocumentSnapshot docSeatLayout = await firebaseFirestore
+          .collection("seatLayouts")
+          .doc(trip.seatLayoutId)
+          .get();
+
+      Map<String, dynamic> updateFloor1 = docSeatLayout['floor1'] ?? {};
+      Map<String, dynamic> updateFloor2 = docSeatLayout['floor2'] ?? {};
+
+      // Cập nhật status ghế tầng 1
+      if (seatBookingModel.selectSeatFloor1.isNotEmpty) {
+        seatBookingModel.selectSeatFloor1.forEach((seat) {
+          updateFloor1[seat] = {
+            "bookedBy": "Nhien dep trai vcl",
+            "customerInfo": "Hehhêe",
+            "isBooked": true,
+          };
+        });
+
+        await firebaseFirestore
+            .collection("seatLayouts")
+            .doc(trip.seatLayoutId)
+            .update({
+          "floor1": updateFloor1,
+        });
+      }
+
+      // Cập nhật status ghế tầng 2
+      if (seatBookingModel.selectSeatFloor2.isNotEmpty) {
+        seatBookingModel.selectSeatFloor2.forEach((seat) {
+          updateFloor2[seat] = {
+            "bookedBy": "Nhien dep trai vcl",
+            "customerInfo": "Hehhêe",
+            "isBooked": true,
+          };
+        });
+
+        await firebaseFirestore
+            .collection("seatLayouts")
+            .doc(trip.seatLayoutId)
+            .update({
+          "floor2": updateFloor2,
+        });
+      }
 
       Navigator.pop(context);
 
-      Navigator.push(context, MaterialPageRoute(builder: (context) => TicketScreen()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => MainScreen()));
 
       Fluttertoast.showToast(msg: "Đặt vé thành công");
     } else {

@@ -8,14 +8,14 @@ import 'package:gotta_go/screens/ticket_detail_screen.dart';
 import 'package:gotta_go/widgets/loading_widget.dart';
 import 'package:intl/intl.dart';
 
-class TicketScreen extends StatefulWidget {
-  const TicketScreen({super.key});
+class TicketListScreen extends StatefulWidget {
+  const TicketListScreen({super.key});
 
   @override
-  State<TicketScreen> createState() => _TicketScreenState();
+  State<TicketListScreen> createState() => _TicketListScreenState();
 }
 
-class _TicketScreenState extends State<TicketScreen> {
+class _TicketListScreenState extends State<TicketListScreen> {
   int _selectedIndex = 0;
   late final Stream<QuerySnapshot> ticketStream;
 
@@ -28,8 +28,7 @@ class _TicketScreenState extends State<TicketScreen> {
   Stream<QuerySnapshot> getTicketStream(String status) {
     return firebaseFirestore
         .collection("tickets")
-        .doc(firebaseAuth.currentUser!.uid)
-        .collection("allTickets")
+        .where("customerId", isEqualTo: firebaseAuth.currentUser!.uid)
         .where("status", isEqualTo: status)
         .snapshots();
   }
@@ -180,7 +179,8 @@ class _TicketScreenState extends State<TicketScreen> {
             itemBuilder: (context, index) {
               DocumentSnapshot itemDoc = snapshot.data!.docs[index];
 
-              TicketModel itemModel = TicketModel.fromSnapshot(itemDoc, itemDoc.id);
+              TicketModel itemModel =
+                  TicketModel.fromSnapshot(itemDoc, itemDoc.id);
 
               print("Floor 1 ${itemModel.floor1} Floor2 ${itemModel.floor2}");
 
