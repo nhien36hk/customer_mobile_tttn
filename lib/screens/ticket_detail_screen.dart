@@ -41,9 +41,6 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
   String generateTicketQRData() {
     Map<String, String> mapData = {
       "ticketId": widget.ticketModel.ticketId!,
-      "scheduleId": widget.ticketModel.scheduleId,
-      "customerId": widget.ticketModel.customerId,
-      "routeId": widget.ticketModel.routeId,
     };
     return jsonEncode(mapData);
   }

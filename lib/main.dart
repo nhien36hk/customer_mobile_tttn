@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gotta_go/provider/app_infor.dart';
 import 'package:gotta_go/screens/login_screen.dart';
 import 'package:gotta_go/screens/splash_screen.dart';
-import 'package:gotta_go/theme/them_data.dart';
+import 'package:gotta_go/theme/them_data.dart';   
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 

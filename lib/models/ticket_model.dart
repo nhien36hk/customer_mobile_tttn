@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class TicketModel {
   String arrivalTime;
@@ -32,7 +33,7 @@ class TicketModel {
     required this.seatLayoutId,
     required this.status,
     required this.to,
-    this.ticketId
+    this.ticketId,
   });
 
   TicketModel.fromSnapshot(DocumentSnapshot snapshot, String ticketId)
@@ -41,16 +42,31 @@ class TicketModel {
         busId = snapshot['busId'],
         customerId = snapshot['customerId'],
         departureTime = snapshot['departureTime'],
-        floor1 =
-            List<String>.from(snapshot['seatNumber']['floor1'].cast<String>()),
-        floor2 =
-            List<String>.from(snapshot['seatNumber']['floor2'].cast<String>()),
         from = snapshot['from'],
         price = snapshot['price'],
         routeId = snapshot['routeId'],
         scheduleId = snapshot['scheduleId'],
         seatLayoutId = snapshot['seatLayoutId'],
         status = snapshot['status'],
+        to = snapshot['to'],
         ticketId = ticketId,
-        to = snapshot['to'];
+        floor1 = [],
+        floor2 = [] {
+    var seatData = snapshot['seatNumber'];
+    if (seatData is List) {
+      filterFloor(List<String>.from(seatData));
+    }else{
+      Fluttertoast.showToast(msg: "Lỗi list");
+    }
+  }
+
+  void filterFloor(List<String> seats) {
+    for (var seat in seats) {
+      if (seat.contains("A")) {
+        floor1.add(seat);
+      } else {
+        floor2.add(seat);
+      }
+    }
+  }
 }

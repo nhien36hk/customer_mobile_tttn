@@ -31,16 +31,18 @@ class BookingServices {
 
       String scheduleId = documentSnapshot['scheduleId'];
 
+      List<String> seatNumber = [
+        ...seatBookingModel.selectSeatFloor1,
+        ...seatBookingModel.selectSeatFloor2
+      ];
+
       Map<String, dynamic> ticketMap = {
         "routeId": trip.routeId,
         "seatLayoutId": trip.seatLayoutId,
         "scheduleId": scheduleId,
         "customerId": firebaseAuth.currentUser!.uid,
         "busId": trip.busId,
-        "seatNumber": {
-          "floor1": seatBookingModel.selectSeatFloor1,
-          "floor2": seatBookingModel.selectSeatFloor2,
-        },
+        "seatNumber": seatNumber,
         "from": trip.startLocation,
         "to": trip.endLocation,
         "price": seatBookingModel.totalPrice,
@@ -64,7 +66,7 @@ class BookingServices {
         seatBookingModel.selectSeatFloor1.forEach((seat) {
           updateFloor1[seat] = {
             "bookedBy": "Nhien dep trai vcl",
-            "customerInfo": "Hehhêe",
+            "customerInfo": "120831290",
             "isBooked": true,
           };
         });
@@ -82,7 +84,7 @@ class BookingServices {
         seatBookingModel.selectSeatFloor2.forEach((seat) {
           updateFloor2[seat] = {
             "bookedBy": "Nhien dep trai vcl",
-            "customerInfo": "Hehhêe",
+            "customerInfo": "019391283",
             "isBooked": true,
           };
         });
