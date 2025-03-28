@@ -5,19 +5,19 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:gotta_go/constants/constant.dart';
 import 'package:gotta_go/constants/global.dart';
 import 'package:gotta_go/screens/login_screen.dart';
-import 'package:gotta_go/screens/main_screen.dart';
+import 'package:gotta_go/screens/layout_screen.dart';
 import 'package:gotta_go/widgets/loading_widget.dart';
 import 'package:gotta_go/widgets/password_input_widget.dart';
 import 'package:gotta_go/widgets/text_input_widget.dart';
 
-class SignUpScreen extends StatefulWidget {
-  SignUpScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  RegisterScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -97,7 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           if (documentSnapshot.exists) {
             Navigator.pop(context);
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => MainScreen()));
+                context, MaterialPageRoute(builder: (context) => LayoutScreen()));
           } else {
             Map<String, dynamic> userData = {
               'uid': user.uid,
@@ -115,7 +115,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 .set(userData);
             Navigator.pop(context);
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => MainScreen()));
+                context, MaterialPageRoute(builder: (context) => LayoutScreen()));
           }
         }
       } else {

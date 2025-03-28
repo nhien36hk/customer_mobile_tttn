@@ -1,16 +1,22 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gotta_go/constants/constant.dart';
 import 'package:gotta_go/constants/global.dart';
+import 'package:gotta_go/constants/key.dart';
+import 'package:gotta_go/models/create_order_response.dart';
 import 'package:gotta_go/models/schedule_model.dart';
 import 'package:gotta_go/models/seat_booking_model.dart';
-import 'package:gotta_go/screens/pay_method_screen.dart';
+import 'package:gotta_go/screens/chose_pay_method_screen.dart';
 import 'package:gotta_go/screens/seat_selection_screen.dart';
 import 'package:gotta_go/services/booking_services.dart';
+import 'package:gotta_go/utils/endpoints.dart';
 import 'package:gotta_go/widgets/loading_widget.dart';
 import 'package:gotta_go/widgets/method_pay_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:sprintf/sprintf.dart';
 
 class BookingInformation extends StatefulWidget {
   final ScheduleModel trip;
@@ -39,7 +45,7 @@ class _BookingInformationState extends State<BookingInformation> {
     var result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PayMethodScreen(),
+        builder: (context) => ChosePayMethodScreen(),
       ),
     );
     if (result != null) {
@@ -63,7 +69,7 @@ class _BookingInformationState extends State<BookingInformation> {
       appBar: AppBar(
         backgroundColor: Constants.backgroundColor,
         title: const Text(
-          'Chi tiết chuyến đi',
+          'Thanh toán đơn hàng',
           style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
@@ -243,7 +249,7 @@ class _BookingInformationState extends State<BookingInformation> {
                     children: [
                       const Text('Giá vé'),
                       Text(
-                        '750.000đ',
+                        widget.seatBookingModel.counTotalPrice.toString(),
                         style: TextStyle(
                           color: Constants.backgroundColor,
                           fontWeight: FontWeight.bold,
@@ -277,7 +283,8 @@ class _BookingInformationState extends State<BookingInformation> {
                         ),
                       ),
                       Text(
-                        '770.000đ',
+                        (widget.seatBookingModel.countTotalSeats + 20000)
+                            .toString(),
                         style: TextStyle(
                           fontSize: 18,
                           color: Constants.backgroundColor,

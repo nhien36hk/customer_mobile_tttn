@@ -1,10 +1,24 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gotta_go/constants/constant.dart';
+import 'package:gotta_go/services/bus_services.dart';
+import 'package:gotta_go/widgets/loading_widget.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 
 class DateSelectionScreen extends StatefulWidget {
-  const DateSelectionScreen({super.key});
+  DateSelectionScreen({
+    super.key,
+    this.fromLocation,
+    this.toLocation,
+    required this.isHome,
+  });
+
+  String? fromLocation;
+  String? toLocation;
+  bool isHome;
 
   @override
   State<DateSelectionScreen> createState() => _DateSelectionScreenState();
@@ -15,6 +29,14 @@ class _DateSelectionScreenState extends State<DateSelectionScreen> {
   DateTime _focusedDay = DateTime.now();
   final _firstDay = DateTime.now();
   final _lastDay = DateTime.now().add(const Duration(days: 90));
+  bool isHome = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    isHome = widget.isHome!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +56,7 @@ class _DateSelectionScreenState extends State<DateSelectionScreen> {
               ),
             ),
           ),
-          
+
           // Main Content
           SafeArea(
             child: Column(
@@ -120,7 +142,8 @@ class _DateSelectionScreenState extends State<DateSelectionScreen> {
                             Icons.chevron_right,
                             color: Constants.backgroundColor,
                           ),
-                          headerPadding: const EdgeInsets.symmetric(vertical: 0),
+                          headerPadding:
+                              const EdgeInsets.symmetric(vertical: 0),
                           titleCentered: true,
                         ),
                         calendarStyle: CalendarStyle(
@@ -138,7 +161,8 @@ class _DateSelectionScreenState extends State<DateSelectionScreen> {
                           cellPadding: const EdgeInsets.all(0),
                         ),
                         daysOfWeekStyle: DaysOfWeekStyle(
-                          weekdayStyle: const TextStyle(fontWeight: FontWeight.bold),
+                          weekdayStyle:
+                              const TextStyle(fontWeight: FontWeight.bold),
                           weekendStyle: TextStyle(
                             color: Colors.red[300],
                             fontWeight: FontWeight.bold,
@@ -180,9 +204,22 @@ class _DateSelectionScreenState extends State<DateSelectionScreen> {
                         const SizedBox(height: 20),
                       ],
                       ElevatedButton(
-                        onPressed: _selectedDay != null
-                            ? () => Navigator.pop(context, _selectedDay)
-                            : null,
+                        onPressed: () {
+                          if (_selectedDay != null) {
+                            if (isHome) {
+                              Navigator.pop(context, _selectedDay);
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (context) => LoadingWidget(),
+                              );
+                              BusServices.searchTrips(widget.fromLocation!,
+                                  widget.toLocation!, _selectedDay!, context);
+                            }
+                          } else {
+                            Fluttertoast.showToast(msg: "Vui lòng chọn ngày");
+                          }
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 15),
@@ -210,4 +247,4 @@ class _DateSelectionScreenState extends State<DateSelectionScreen> {
       ),
     );
   }
-} 
+}

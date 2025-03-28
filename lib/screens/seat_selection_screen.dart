@@ -4,7 +4,7 @@ import 'package:gotta_go/constants/constant.dart';
 import 'package:gotta_go/constants/global.dart';
 import 'package:gotta_go/models/schedule_model.dart';
 import 'package:gotta_go/models/seat_booking_model.dart';
-import 'package:gotta_go/screens/pickup_location_screen.dart';
+import 'package:gotta_go/screens/chose_location_screen.dart';
 
 class SeatSelectionScreen extends StatefulWidget {
   SeatSelectionScreen({super.key, required this.schedule});
@@ -225,9 +225,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
                         ),
                         itemCount: 12,
                         itemBuilder: (context, index) {
-                          String row = "A";
-                          String Key = "0${(index + 1).toString()}";
-                          String seatKey = '$row$Key';
+                          String seatKey = 'A${(index +1).toString().padLeft(2, "0")}';
                           bool isSelected = selectedSeats1.contains(seatKey);
                           bool isExist = floor1[seatKey] != null;
                           bool isBooked =
@@ -313,9 +311,8 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
                         ),
                         itemCount: 12,
                         itemBuilder: (context, index) {
-                          String row = "B";
-                          String Key = "0${(index +1).toString()}";
-                          String seatKey = '$row$Key';
+                          String seatKey =
+                              'B${(index + 1).toString().padLeft(2, "0")}';
                           bool isSelected = selectedSeats2.contains(seatKey);
                           bool isExist = floor2[seatKey] != null;
                           bool isBooked =
@@ -398,7 +395,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => PickupLocationScreen(
+                              builder: (context) => ChoseLocationScreen(
                                 tripModel: widget.schedule,
                                 seatBookingModel: SeatBookingModel(
                                     selectSeatFloor1: selectedSeats1,

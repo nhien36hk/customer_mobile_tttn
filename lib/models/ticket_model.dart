@@ -3,7 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class TicketModel {
   String arrivalTime;
-  Timestamp bookingTime;
+  String bookingTime;
   String busId;
   String customerId;
   String departureTime;

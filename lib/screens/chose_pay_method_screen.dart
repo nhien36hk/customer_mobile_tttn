@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gotta_go/widgets/method_pay_widget.dart';
 
-class PayMethodScreen extends StatefulWidget {
-  const PayMethodScreen({super.key});
+class ChosePayMethodScreen extends StatefulWidget {
+  const ChosePayMethodScreen({super.key});
 
   @override
-  State<PayMethodScreen> createState() => _PayMethodScreenState();
+  State<ChosePayMethodScreen> createState() => _ChosePayMethodScreenState();
 }
 
-class _PayMethodScreenState extends State<PayMethodScreen> {
+class _ChosePayMethodScreenState extends State<ChosePayMethodScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -36,9 +36,7 @@ class _PayMethodScreenState extends State<PayMethodScreen> {
                   {"image": "images/vnpay-logo.jpg", "method": "VNPAY"}),
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: Colors.transparent
-                ),
+                decoration: BoxDecoration(color: Colors.transparent),
                 child: MethodPayWidget(
                     urlImage: "images/vnpay-logo.jpg", textMethod: "VNPAY"),
               ),
@@ -48,9 +46,7 @@ class _PayMethodScreenState extends State<PayMethodScreen> {
                   {"image": "images/zalo_pa.png", "method": "ZALOPAY"}),
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                 decoration: BoxDecoration(
-                  color: Colors.transparent
-                ),
+                decoration: BoxDecoration(color: Colors.transparent),
                 child: MethodPayWidget(
                     urlImage: "images/zalo_pa.png", textMethod: "ZALOPAY"),
               ),
@@ -60,9 +56,7 @@ class _PayMethodScreenState extends State<PayMethodScreen> {
                   context, {"image": "images/cash_icon.png", "method": "CASH"}),
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                 decoration: BoxDecoration(
-                  color: Colors.transparent
-                ),
+                decoration: BoxDecoration(color: Colors.transparent),
                 child: MethodPayWidget(
                     urlImage: "images/cash_icon.png",
                     textMethod: "Thanh toán bằng tiền mặt"),

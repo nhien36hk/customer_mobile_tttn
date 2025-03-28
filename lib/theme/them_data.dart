@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 
 class ThemeProvider {
+  // Định nghĩa các màu chính của ứng dụng
+  static const Color primaryOrange = Color(0xFFE65100);
+  static const Color secondaryOrange = Color(0xFFFF9800);
+  static const Color lightOrange = Color(0xFFFFB557);
+  static const Color darkOrange = Color(0xFFD84315);
+  static const Color accentColor = Color(0xFF042D62);
+
+  // Theme data chính của ứng dụng
   static final ThemeData themeData = ThemeData(
     scaffoldBackgroundColor: Colors.white,
-    colorScheme: const ColorScheme.light(), // Thêm const ở đây
+    colorScheme: const ColorScheme.light(),
     textTheme: TextTheme(
       bodyLarge: TextStyle(fontSize: 18),
       bodyMedium: TextStyle(fontSize: 18),

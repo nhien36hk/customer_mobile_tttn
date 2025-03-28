@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:gotta_go/constants/constant.dart';
 import 'package:gotta_go/models/ticket_model.dart';
 
-class SeatDetailScreen extends StatefulWidget {
-  SeatDetailScreen({super.key, required this.ticketModel});
+class TicketSeatScreen extends StatefulWidget {
+  TicketSeatScreen({super.key, required this.ticketModel});
 
   TicketModel ticketModel;
 
   @override
-  State<SeatDetailScreen> createState() => _SeatDetailScreenState();
+  State<TicketSeatScreen> createState() => _TicketSeatScreenState();
 }
 
-class _SeatDetailScreenState extends State<SeatDetailScreen> {
+class _TicketSeatScreenState extends State<TicketSeatScreen> {
   int? selectedFloor = 1;
 
   @override
@@ -126,20 +126,14 @@ class _SeatDetailScreenState extends State<SeatDetailScreen> {
                             mainAxisSpacing: 10),
                         itemCount: 12,
                         itemBuilder: (context, index) {
-                          String row = String.fromCharCode(65 + index ~/ 4);
-                          String key = ((index % 4) + 1).toString();
-                          String seat = "$row$key";
-                          bool isBooked =
-                              widget.ticketModel.floor1.contains(seat);
+                          String seat = "A${(index + 1).toString().padLeft(2, '0')}";
+                          bool isBooked = widget.ticketModel.floor1.contains(seat);
                           return GestureDetector(
                             child: Container(
                               decoration: BoxDecoration(
-                                color:
-                                    isBooked ? Colors.blue[100] : Colors.white,
+                                color: isBooked ? Colors.blue[100] : Colors.white,
                                 border: Border.all(
-                                  color: isBooked
-                                      ? Colors.green
-                                      : Colors.green.shade200,
+                                  color: isBooked ? Colors.green : Colors.green.shade200,
                                   width: 2,
                                 ),
                                 borderRadius: BorderRadius.circular(10),
@@ -150,9 +144,7 @@ class _SeatDetailScreenState extends State<SeatDetailScreen> {
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
-                                      color: isBooked
-                                          ? Colors.black
-                                          : Colors.grey[300]),
+                                      color: isBooked ? Colors.black : Colors.grey[300]),
                                 ),
                               ),
                             ),
@@ -170,20 +162,14 @@ class _SeatDetailScreenState extends State<SeatDetailScreen> {
                             mainAxisSpacing: 10),
                         itemCount: 12,
                         itemBuilder: (context, index) {
-                          String row = String.fromCharCode(65 + index ~/ 4);
-                          String key = ((index % 4) + 1).toString();
-                          String seat = "$row$key";
-                          bool isBooked =
-                              widget.ticketModel.floor2.contains(seat);
+                          String seat = "B${(index + 1).toString().padLeft(2, '0')}";
+                          bool isBooked = widget.ticketModel.floor2.contains(seat);
                           return GestureDetector(
                             child: Container(
                               decoration: BoxDecoration(
-                                color:
-                                    isBooked ? Colors.blue[100] : Colors.white,
+                                color: isBooked ? Colors.blue[100] : Colors.white,
                                 border: Border.all(
-                                  color: !isBooked
-                                      ? Colors.green.shade200
-                                      : Colors.green,
+                                  color: !isBooked ? Colors.green.shade200 : Colors.green,
                                   width: 2,
                                 ),
                                 borderRadius: BorderRadius.circular(10),
@@ -194,9 +180,7 @@ class _SeatDetailScreenState extends State<SeatDetailScreen> {
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
-                                      color: isBooked
-                                          ? Colors.black
-                                          : Colors.grey[300]),
+                                      color: isBooked ? Colors.black : Colors.grey[300]),
                                 ),
                               ),
                             ),
@@ -228,8 +212,7 @@ class _SeatDetailScreenState extends State<SeatDetailScreen> {
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.circular(4),
             ),
-            child:
-                icon != null ? Icon(icon, size: 16, color: Colors.grey) : null,
+            child: icon != null ? Icon(icon, size: 16, color: Colors.grey) : null,
           ),
           const SizedBox(width: 4),
           Text(text, style: const TextStyle(fontSize: 12)),

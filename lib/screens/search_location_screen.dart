@@ -7,17 +7,17 @@ import 'package:gotta_go/constants/constant.dart';
 import 'package:gotta_go/constants/global.dart';
 import 'package:http/http.dart' as http;
 
-class LocationSelectionScreen extends StatefulWidget {
-  LocationSelectionScreen({super.key, required this.isForm});
+class SearchLocationScreen extends StatefulWidget {
+  SearchLocationScreen({super.key, required this.isForm});
 
   bool isForm;
 
   @override
-  State<LocationSelectionScreen> createState() =>
-      _LocationSelectionScreenState();
+  State<SearchLocationScreen> createState() =>
+      _SearchLocationScreenState();
 }
 
-class _LocationSelectionScreenState extends State<LocationSelectionScreen> {
+class _SearchLocationScreenState extends State<SearchLocationScreen> {
   int _selectedTab = 0;
   List<String> provinces = [];
   bool isLoading = true;

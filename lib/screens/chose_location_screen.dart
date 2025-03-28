@@ -8,18 +8,18 @@ import 'package:gotta_go/models/seat_booking_model.dart';
 import 'package:gotta_go/screens/booking_information.dart';
 import 'package:gotta_go/widgets/warning_widget.dart';
 
-class PickupLocationScreen extends StatefulWidget {
-  PickupLocationScreen(
+class ChoseLocationScreen extends StatefulWidget {
+  ChoseLocationScreen(
       {super.key, required this.tripModel, required this.seatBookingModel});
 
   ScheduleModel tripModel;
   SeatBookingModel seatBookingModel;
 
   @override
-  State<PickupLocationScreen> createState() => _PickupLocationScreenState();
+  State<ChoseLocationScreen> createState() => _ChoseLocationScreenState();
 }
 
-class _PickupLocationScreenState extends State<PickupLocationScreen> {
+class _ChoseLocationScreenState extends State<ChoseLocationScreen> {
   String? startLocation;
   String? endLocation;
   int? selectedIndex = 1;

@@ -4,17 +4,32 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gotta_go/constants/global.dart';
 import 'package:gotta_go/models/route_model.dart';
 import 'package:gotta_go/models/schedule_model.dart';
-import 'package:gotta_go/screens/trip_list_screen.dart';
+import 'package:gotta_go/screens/search_trip_screen.dart';
+import 'package:gotta_go/services/search_history_service.dart';
 import 'package:gotta_go/widgets/warning_widget.dart';
 import 'package:intl/intl.dart';
 
 class BusServices {
+  static final SearchHistoryService _searchHistoryService =
+      SearchHistoryService();
+
   static Future<void> searchTrips(String fromLocation, String toLocation,
       DateTime selectedDate, BuildContext context) async {
     if (fromLocation != null && toLocation != null && selectedDate != null) {
       // Hiển thị loading
 
       String selectedDateStr = DateFormat("yyyy-MM-dd").format(selectedDate!);
+
+      // Lưu lịch sử tìm kiếm
+      if (firebaseAuth.currentUser != null) {
+        try {
+          await _searchHistoryService.saveSearchHistory(
+              fromLocation, toLocation, selectedDate);
+        } catch (e) {
+          print("Lỗi khi lưu lịch sử tìm kiếm: $e");
+        }
+      }
+
       QuerySnapshot querySnapshot = await firebaseFirestore
           .collection("routes")
           .where('from', isEqualTo: fromLocation)
@@ -82,14 +97,21 @@ class BusServices {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => TripListScreen(
+              builder: (context) => SearchTripScreen(
                 listSchedules: listSchedules,
+                fromLocation: fromLocation,
+                selectedDate: selectedDate,
+                toLocation: toLocation,
               ),
             ),
           );
         } else {
           Navigator.pop(context);
-          Fluttertoast.showToast(msg: "Không có lịch trình nào với id route");
+          showDialog(
+            context: context,
+            builder: (context) => WarningWidget(
+                colorInfor: Colors.red, textWarning: "Không có lịch trình nào với tuyến này"),
+          );
         }
       } else {
         Navigator.pop(context);
@@ -143,5 +165,80 @@ class BusServices {
       Fluttertoast.showToast(msg: "Lỗi lấy route $e");
     }
     return [];
+  }
+
+  static Future<void> searchTripsForState(
+      String fromLocation,
+      String toLocation,
+      DateTime selectedDate,
+      BuildContext context,
+      Function(List<ScheduleModel>) onComplete) async {
+    if (fromLocation != null && toLocation != null && selectedDate != null) {
+      // Lưu lịch sử tìm kiếm
+      if (firebaseAuth.currentUser != null) {
+        try {
+          await _searchHistoryService.saveSearchHistory(
+              fromLocation, toLocation, selectedDate);
+        } catch (e) {
+          print("Lỗi khi lưu lịch sử tìm kiếm: $e");
+        }
+      }
+
+      String selectedDateStr = DateFormat("yyyy-MM-dd").format(selectedDate);
+      QuerySnapshot querySnapshot = await firebaseFirestore
+          .collection("routes")
+          .where('from', isEqualTo: fromLocation)
+          .where('to', isEqualTo: toLocation)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        DocumentSnapshot routeDoc = querySnapshot.docs.first;
+        String idRoute = routeDoc.id;
+        QuerySnapshot querySchedule = await firebaseFirestore
+            .collection("schedules")
+            .where('routeId', isEqualTo: idRoute)
+            .get();
+
+        if (querySchedule.docs.isNotEmpty) {
+          List<ScheduleModel> listSchedules = [];
+          for (var scheduleDoc in querySchedule.docs) {
+            String departureTimeStr = scheduleDoc['departureTime'];
+            DateTime departureTime = DateTime.parse(departureTimeStr).toLocal();
+            String departureFormat =
+                DateFormat("yyyy-MM-dd").format(departureTime);
+
+            if (selectedDateStr == departureFormat) {
+              String idSeatLayout = scheduleDoc['seatLayoutId'];
+              String busId = scheduleDoc['busId'];
+              DocumentSnapshot busDoc =
+                  await firebaseFirestore.collection("buses").doc(busId).get();
+              String nameCar = busDoc['busNumber'];
+              DocumentSnapshot seatLayoutDoc = await firebaseFirestore
+                  .collection("seatLayouts")
+                  .doc(idSeatLayout)
+                  .get();
+
+              if (seatLayoutDoc.exists && seatLayoutDoc != null) {
+                Map<String, dynamic> seatLayoutMap =
+                    seatLayoutDoc.data() as Map<String, dynamic>;
+                int availableSeats = await countAvailableSeats(seatLayoutMap);
+                ScheduleModel itemSchedule = ScheduleModel.fromSnapshot(
+                    scheduleDoc,
+                    availableSeats,
+                    nameCar,
+                    fromLocation,
+                    toLocation);
+                listSchedules.add(itemSchedule);
+              }
+            }
+          }
+          onComplete(listSchedules);
+        } else {
+          onComplete([]);
+        }
+      } else {
+        onComplete([]);
+      }
+    }
   }
 }

@@ -12,4 +12,5 @@ class SeatBookingModel {
   }) : totalPrice = (selectSeatFloor1.length * defaultPriceFloor1 + selectSeatFloor2.length * defaultPriceFloor2);
 
   int get countTotalSeats => selectSeatFloor1.length + selectSeatFloor2.length;
+  int get counTotalPrice => (selectSeatFloor1.length * defaultPriceFloor1) + (selectSeatFloor2.length * defaultPriceFloor2);
 }

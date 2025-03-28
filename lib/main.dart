@@ -7,6 +7,12 @@ import 'package:gotta_go/theme/them_data.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
+// Khai báo navigatorKey toàn cục để truy cập từ các dịch vụ
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+// Thêm global key cho LayoutScreen
+final GlobalKey<State<LayoutScreen>> layoutScreenKey = GlobalKey<State<LayoutScreen>>();
+
 // Initialize Firebase only if it hasn't been initialized yet
 Future<void> initializeFirebase() async {
   // Check if Firebase is already initialized
@@ -44,6 +50,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey, // Đặt navigatorKey cho MaterialApp
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeProvider.themeData,

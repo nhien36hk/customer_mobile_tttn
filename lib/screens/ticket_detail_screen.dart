@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:gotta_go/constants/constant.dart';
 import 'package:gotta_go/models/ticket_model.dart';
-import 'package:gotta_go/screens/seat_detail_screen.dart';
+import 'package:gotta_go/screens/ticket_seat_screen.dart';
 import 'package:gotta_go/services/ticket_service.dart';
 import 'package:gotta_go/widgets/loading_widget.dart';
 import 'package:intl/intl.dart';
@@ -236,7 +236,7 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      SeatDetailScreen(ticketModel: widget.ticketModel),
+                      TicketSeatScreen(ticketModel: widget.ticketModel),
                 ),
               ),
               child: Container(
@@ -353,6 +353,7 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
           child: ElevatedButton.icon(
             onPressed: () {
               // TODO: Implement share ticket
+              TicketServices.shareTicket(globalKey);
             },
             icon: const Icon(Icons.share),
             label: const Text('Chia sẻ'),

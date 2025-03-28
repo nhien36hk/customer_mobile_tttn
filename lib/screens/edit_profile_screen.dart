@@ -24,17 +24,55 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+  String? avatarUrl;
+  bool isLoadingAvatar = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     userInfor = Provider.of<AppInfor>(context, listen: false).userInfor;
+    _loadUserAvatar();
 
     if (userInfor != null) {
       nameController.text = userInfor!.name;
       emailController.text = userInfor!.email;
       phoneController.text = userInfor!.phone;
+    }
+  }
+
+  // Tải ảnh đại diện người dùng
+  Future<void> _loadUserAvatar() async {
+    if (firebaseAuth.currentUser != null) {
+      try {
+        setState(() {
+          isLoadingAvatar = true;
+        });
+        
+        // Kiểm tra xem ảnh đã tồn tại chưa
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child("avatars/${firebaseAuth.currentUser!.uid}");
+            
+        try {
+          // Lấy URL của ảnh
+          String downloadURL = await ref.getDownloadURL();
+          setState(() {
+            avatarUrl = downloadURL;
+            isLoadingAvatar = false;
+          });
+        } catch (e) {
+          // Nếu không có ảnh
+          setState(() {
+            avatarUrl = null;
+            isLoadingAvatar = false;
+          });
+        }
+      } catch (e) {
+        setState(() {
+          isLoadingAvatar = false;
+        });
+        print("Lỗi khi tải ảnh đại diện: $e");
+      }
     }
   }
 
@@ -65,17 +103,70 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> updateAvatar(ImageSource source) async {
     try {
-      XFile? imagePicker = await ImagePicker().pickImage(source: source);
-      if (imagePicker != null) {
-        File imageFile = File(imagePicker!.path);
-        final ref = await FirebaseStorage.instance
+      // Hiển thị dialog loading
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => LoadingWidget(),
+      );
+      
+      // Chọn ảnh từ nguồn được chỉ định (camera hoặc thư viện)
+      final ImagePicker _picker = ImagePicker();
+      final XFile? image = await _picker.pickImage(
+        source: source,
+        maxWidth: 800, // Giới hạn kích thước để tối ưu
+        maxHeight: 800,
+        imageQuality: 85, // Nén ảnh để tiết kiệm dung lượng
+      );
+      
+      // Nếu có ảnh được chọn
+      if (image != null) {
+        // Tạo tham chiếu đến vị trí lưu trữ trong Firebase Storage
+        final storageRef = FirebaseStorage.instance
             .ref()
-            .child("avatars/${firebaseAuth.currentUser!.uid}")
-            .putFile(imageFile);
+            .child("avatars/${firebaseAuth.currentUser!.uid}");
+            
+        // Tải tệp lên Firebase Storage
+        File imageFile = File(image.path);
+        final uploadTask = await storageRef.putFile(
+          imageFile,
+          SettableMetadata(contentType: 'image/jpeg'),
+        );
+        
+        // Lấy URL tải xuống
+        final downloadUrl = await storageRef.getDownloadURL();
+        
+        // Lưu URL vào Firestore trong hồ sơ người dùng
+        await firebaseFirestore
+            .collection("users")
+            .doc(firebaseAuth.currentUser!.uid)
+            .update({"avatarUrl": downloadUrl});
+            
+        // Cập nhật trạng thái
+        setState(() {
+          avatarUrl = downloadUrl;
+        });
+        
+        // Đóng dialog loading
+        Navigator.pop(context);
+        
+        // Hiển thị thông báo
+        Fluttertoast.showToast(
+          msg: "Cập nhật ảnh đại diện thành công",
+          toastLength: Toast.LENGTH_SHORT,
+        );
+      } else {
+        // Đóng dialog loading nếu không có ảnh được chọn
+        Navigator.pop(context);
       }
     } catch (e) {
-      print("Lỗi chọn ảnh $e");
-      Fluttertoast.showToast(msg: "Lỗi cập nhật ảnh đại diện $e");
+      // Đóng dialog loading nếu có lỗi
+      Navigator.pop(context);
+      print("Lỗi cập nhật ảnh đại diện: $e");
+      Fluttertoast.showToast(
+        msg: "Lỗi cập nhật ảnh đại diện: $e",
+        toastLength: Toast.LENGTH_LONG,
+      );
     }
   }
 
@@ -177,11 +268,41 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             color: Constants.backgroundColor.withOpacity(0.1),
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(
-                            Icons.person,
-                            color: Constants.backgroundColor,
-                            size: 50,
-                          ),
+                          child: isLoadingAvatar
+                              ? const CircularProgressIndicator()
+                              : avatarUrl != null
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(50),
+                                      child: Image.network(
+                                        avatarUrl!,
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.cover,
+                                        loadingBuilder: (context, child, loadingProgress) {
+                                          if (loadingProgress == null) return child;
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                              value: loadingProgress.expectedTotalBytes != null
+                                                  ? loadingProgress.cumulativeBytesLoaded /
+                                                      loadingProgress.expectedTotalBytes!
+                                                  : null,
+                                            ),
+                                          );
+                                        },
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return const Icon(
+                                            Icons.person,
+                                            color: Constants.backgroundColor,
+                                            size: 50,
+                                          );
+                                        },
+                                      ),
+                                    )
+                                  : const Icon(
+                                      Icons.person,
+                                      color: Constants.backgroundColor,
+                                      size: 50,
+                                    ),
                         ),
                       ),
                       const SizedBox(height: 10),

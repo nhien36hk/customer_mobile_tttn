@@ -7,8 +7,8 @@ import 'package:gotta_go/constants/global.dart';
 import 'package:gotta_go/models/user_model.dart';
 import 'package:gotta_go/provider/app_infor.dart';
 import 'package:gotta_go/screens/home_screen.dart';
-import 'package:gotta_go/screens/main_screen.dart';
-import 'package:gotta_go/screens/sign_up_screen.dart';
+import 'package:gotta_go/screens/layout_screen.dart';
+import 'package:gotta_go/screens/register_screen.dart';
 import 'package:gotta_go/widgets/loading_widget.dart';
 import 'package:gotta_go/widgets/password_input_widget.dart';
 import 'package:gotta_go/widgets/text_input_widget.dart';
@@ -64,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (userSnapshot.exists) {
           Navigator.pop(context);
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => MainScreen()));
+              context, MaterialPageRoute(builder: (context) => LayoutScreen()));
         } else {
           Map<String, dynamic> userData = {
             'uid': user.uid,
@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
               .set(userData);
           Navigator.pop(context);
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => MainScreen()));
+              context, MaterialPageRoute(builder: (context) => LayoutScreen()));
         }
       }
     } catch (e) {
@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => MainScreen(),
+                builder: (context) => LayoutScreen(),
               ),
             );
           } else {
@@ -211,9 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (value.length < 6) {
                             return "Mật khẩu phải có ít nhất 6 ký tự";
                           }
-                          if (!value.contains(RegExp(r'[A-Z]'))) {
-                            return "Ít nhất 1 chữ hoa";
-                          }
+                    
                           if (!value.contains(RegExp(r'[0-9]'))) {
                             return "Ít nhất 1 số";
                           }
@@ -265,7 +263,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => SignUpScreen()));
+                                      builder: (context) => RegisterScreen()));
                             },
                             child: Text(
                               "Đăng ký ngay",
