@@ -1,8 +1,11 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:gotta_go/constants/global.dart';
+import 'package:gotta_go/models/schedule_model.dart';
+import 'package:gotta_go/models/seat_booking_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
@@ -92,6 +95,82 @@ class TicketServices {
       );
     } catch (e) {
       throw Exception('Lỗi khi chia sẻ vé: $e');
+    }
+  }
+
+  static Future<void> saveTicket(
+      SeatBookingModel seatBookingModel, ScheduleModel trip) async {
+    DocumentSnapshot documentSnapshot = await firebaseFirestore
+        .collection("seatLayouts")
+        .doc(trip.seatLayoutId)
+        .get();
+
+    String scheduleId = trip.scheduleId;
+
+    List<String> seatNumber = [
+      ...seatBookingModel.selectSeatFloor1,
+      ...seatBookingModel.selectSeatFloor2
+    ];
+
+    Map<String, dynamic> ticketMap = {
+      "routeId": trip.routeId,
+      "seatLayoutId": trip.seatLayoutId,
+      "scheduleId": scheduleId,
+      "customerId": firebaseAuth.currentUser!.uid,
+      "busId": trip.busId,
+      "seatNumber": seatNumber,
+      "from": trip.startLocation,
+      "to": trip.endLocation,
+      "price": seatBookingModel.totalPrice,
+      "status": "booking",
+      "departureTime": trip.departureTime,
+      "arrivalTime": trip.arrivalTime,
+      "bookingTime": DateTime.now().toString(),
+    };
+
+    await firebaseFirestore.collection("tickets").doc().set(ticketMap);
+    DocumentSnapshot docSeatLayout = await firebaseFirestore
+        .collection("seatLayouts")
+        .doc(trip.seatLayoutId)
+        .get();
+
+    Map<String, dynamic> updateFloor1 = docSeatLayout['floor1'] ?? {};
+    Map<String, dynamic> updateFloor2 = docSeatLayout['floor2'] ?? {};
+
+    // Cập nhật status ghế tầng 1
+    if (seatBookingModel.selectSeatFloor1.isNotEmpty) {
+      seatBookingModel.selectSeatFloor1.forEach((seat) {
+        updateFloor1[seat] = {
+          "bookedBy": "Nhien dep trai vcl",
+          "customerInfo": "120831290",
+          "isBooked": true,
+        };
+      });
+
+      await firebaseFirestore
+          .collection("seatLayouts")
+          .doc(trip.seatLayoutId)
+          .update({
+        "floor1": updateFloor1,
+      });
+    }
+
+    // Cập nhật status ghế tầng 2
+    if (seatBookingModel.selectSeatFloor2.isNotEmpty) {
+      seatBookingModel.selectSeatFloor2.forEach((seat) {
+        updateFloor2[seat] = {
+          "bookedBy": "Nhien dep trai vcl",
+          "customerInfo": "019391283",
+          "isBooked": true,
+        };
+      });
+
+      await firebaseFirestore
+          .collection("seatLayouts")
+          .doc(trip.seatLayoutId)
+          .update({
+        "floor2": updateFloor2,
+      });
     }
   }
 }

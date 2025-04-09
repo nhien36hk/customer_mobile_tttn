@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gotta_go/constants/constant.dart';
 import 'package:gotta_go/constants/global.dart';
-import 'package:gotta_go/screens/login_screen.dart';
+import 'package:gotta_go/screens/page_screens/authentication/login_screen.dart';
 import 'package:gotta_go/screens/layout_screen.dart';
 import 'package:gotta_go/widgets/gradient_background.dart';
 

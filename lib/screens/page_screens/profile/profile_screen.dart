@@ -3,8 +3,8 @@ import 'package:gotta_go/constants/constant.dart';
 import 'package:gotta_go/constants/global.dart';
 import 'package:gotta_go/models/user_model.dart';
 import 'package:gotta_go/provider/app_infor.dart';
-import 'package:gotta_go/screens/edit_profile_screen.dart';
-import 'package:gotta_go/screens/login_screen.dart';
+import 'package:gotta_go/screens/page_screens/profile/edit_profile_screen.dart';
+import 'package:gotta_go/screens/page_screens/authentication/login_screen.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -120,11 +120,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child:
                     _buildMenuItem(Icons.account_circle, 'Thông tin cá nhân'),
               ),
-              _buildMenuItem(Icons.notifications, 'Thông báo'),
-              _buildMenuItem(Icons.payment, 'Phương thức thanh toán'),
-              _buildMenuItem(Icons.security, 'Bảo mật'),
-              _buildMenuItem(Icons.help, 'Trợ giúp & Hỗ trợ'),
-              _buildMenuItem(Icons.info, 'Về chúng tôi'),
 
               const SizedBox(height: 20),
               // Nút đăng xuất

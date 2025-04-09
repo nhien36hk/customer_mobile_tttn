@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gotta_go/constants/constant.dart';
 import 'package:gotta_go/models/ticket_model.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gotta_go/screens/page_screens/ticket/ticket_map_screen.dart';
 
 class TicketSeatScreen extends StatefulWidget {
   TicketSeatScreen({super.key, required this.ticketModel});
@@ -15,6 +17,7 @@ class TicketSeatScreen extends StatefulWidget {
 
 class _TicketSeatScreenState extends State<TicketSeatScreen> {
   int? selectedFloor = 1;
+  final LatLng destination = const LatLng(10.800021, 106.654416); // Vị trí hardcode
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +41,14 @@ class _TicketSeatScreenState extends State<TicketSeatScreen> {
               color: Colors.white,
             ),
           ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.directions, color: Colors.white),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => TicketMapScreen(destination: destination),),);
+              },
+            ),
+          ],
         ),
         body: Padding(
           padding: EdgeInsets.all(20),

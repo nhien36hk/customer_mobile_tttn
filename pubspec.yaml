@@ -61,6 +61,9 @@ dependencies:
   sprintf: ^7.0.0
   webview_flutter: ^4.5.0
   crypto: ^3.0.3
+  google_maps_flutter: ^2.12.1
+  geolocator: ^13.0.4
+  flutter_polyline_points: ^2.0.0
 
 dev_dependencies:
   flutter_test:

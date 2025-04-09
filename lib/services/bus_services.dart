@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gotta_go/constants/global.dart';
 import 'package:gotta_go/models/route_model.dart';
 import 'package:gotta_go/models/schedule_model.dart';
-import 'package:gotta_go/screens/search_trip_screen.dart';
+import 'package:gotta_go/screens/page_screens/home/trip_screens/search_trip_screen.dart';
 import 'package:gotta_go/services/search_history_service.dart';
 import 'package:gotta_go/widgets/warning_widget.dart';
 import 'package:intl/intl.dart';

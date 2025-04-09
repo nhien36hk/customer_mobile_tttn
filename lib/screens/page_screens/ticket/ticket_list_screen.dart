@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gotta_go/constants/constant.dart';
 import 'package:gotta_go/constants/global.dart';
 import 'package:gotta_go/models/ticket_model.dart';
-import 'package:gotta_go/screens/ticket_detail_screen.dart';
+import 'package:gotta_go/screens/page_screens/ticket/ticket_detail_screen.dart';
 import 'package:gotta_go/widgets/loading_widget.dart';
 import 'package:intl/intl.dart';
 
@@ -182,8 +182,6 @@ class _TicketListScreenState extends State<TicketListScreen> {
               TicketModel itemModel =
                   TicketModel.fromSnapshot(itemDoc, itemDoc.id);
 
-              print("Floor 1 ${itemModel.floor1} Floor2 ${itemModel.floor2}");
-
               return GestureDetector(
                 onTap: () => Navigator.push(
                   context,
@@ -263,7 +261,7 @@ class _TicketListScreenState extends State<TicketListScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Hồ Chí Minh → Đà Lạt',
+                                  '${itemModel.from} → ${itemModel.to}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,

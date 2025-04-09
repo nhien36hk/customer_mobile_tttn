@@ -1,17 +1,20 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gotta_go/provider/app_infor.dart';
-import 'package:gotta_go/screens/login_screen.dart';
-import 'package:gotta_go/screens/splash_screen.dart';
-import 'package:gotta_go/theme/them_data.dart';   
+import 'package:gotta_go/screens/layout_screen.dart';
+import 'package:gotta_go/screens/page_screens/authentication/login_screen.dart';
+import 'package:gotta_go/screens/splash_screens/splash_screen.dart';
+import 'package:gotta_go/theme/them_data.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
+import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 
 // Khai báo navigatorKey toàn cục để truy cập từ các dịch vụ
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 // Thêm global key cho LayoutScreen
-final GlobalKey<State<LayoutScreen>> layoutScreenKey = GlobalKey<State<LayoutScreen>>();
+final GlobalKey<State<LayoutScreen>> layoutScreenKey =
+    GlobalKey<State<LayoutScreen>>();
 
 // Initialize Firebase only if it hasn't been initialized yet
 Future<void> initializeFirebase() async {
@@ -24,7 +27,7 @@ Future<void> initializeFirebase() async {
         appId: "1:323149713826:android:17a7588f9122688827a2fb",
         messagingSenderId: "323149713826",
         projectId: "nhom18-tttn",
-        storageBucket: "hom18-tttn.firebasestorage.app",
+        storageBucket: "nhom18-tttn.firebasestorage.app",
       ),
     );
   }
@@ -35,6 +38,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeFirebase();
   await initializeDateFormatting('vi_VN', null);
+  final GoogleMapsFlutterPlatform mapsImplementation =
+      GoogleMapsFlutterPlatform.instance;
+  if (mapsImplementation is MethodChannelGoogleMapsFlutter) {
+    mapsImplementation.useAndroidViewSurface = true; // Enable Latest renderer
+  }
   runApp(
     ChangeNotifierProvider(
       create: (context) => AppInfor(),

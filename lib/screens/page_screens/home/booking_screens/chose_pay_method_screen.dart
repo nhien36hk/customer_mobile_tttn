@@ -41,16 +41,16 @@ class _ChosePayMethodScreenState extends State<ChosePayMethodScreen> {
                     urlImage: "images/vnpay-logo.jpg", textMethod: "VNPAY"),
               ),
             ),
-            GestureDetector(
-              onTap: () => Navigator.pop(context,
-                  {"image": "images/zalo_pa.png", "method": "ZALOPAY"}),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(color: Colors.transparent),
-                child: MethodPayWidget(
-                    urlImage: "images/zalo_pa.png", textMethod: "ZALOPAY"),
-              ),
-            ),
+            // GestureDetector(
+            //   onTap: () => Navigator.pop(context,
+            //       {"image": "images/zalo_pa.png", "method": "ZALOPAY"}),
+            //   child: Container(
+            //     width: MediaQuery.of(context).size.width,
+            //     decoration: BoxDecoration(color: Colors.transparent),
+            //     child: MethodPayWidget(
+            //         urlImage: "images/zalo_pa.png", textMethod: "ZALOPAY"),
+            //   ),
+            // ),
             GestureDetector(
               onTap: () => Navigator.pop(
                   context, {"image": "images/cash_icon.png", "method": "CASH"}),

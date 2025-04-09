@@ -7,9 +7,67 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:323149713826:android:0bf99eb634bd378827a2fb",
+        "android_client_info": {
+          "package_name": "com.example.gotta_driver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "323149713826-6bjjr75noqtssurg2d0k8lc6k36onsfm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhRB8dNRqAA8eXUrlkT_07uN8yrSPTiRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "323149713826-6bjjr75noqtssurg2d0k8lc6k36onsfm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:323149713826:android:17a7588f9122688827a2fb",
         "android_client_info": {
           "package_name": "com.example.gotta_go"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "323149713826-6bjjr75noqtssurg2d0k8lc6k36onsfm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhRB8dNRqAA8eXUrlkT_07uN8yrSPTiRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "323149713826-6bjjr75noqtssurg2d0k8lc6k36onsfm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:323149713826:android:9b3b19432755b4d927a2fb",
+        "android_client_info": {
+          "package_name": "com.example.map_flutter"
         }
       },
       "oauth_client": [

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:gotta_go/constants/constant.dart';
 import 'package:gotta_go/constants/global.dart';
-import 'package:gotta_go/screens/login_screen.dart';
+import 'package:gotta_go/screens/page_screens/authentication/login_screen.dart';
 import 'package:gotta_go/screens/layout_screen.dart';
 import 'package:gotta_go/widgets/loading_widget.dart';
 import 'package:gotta_go/widgets/password_input_widget.dart';

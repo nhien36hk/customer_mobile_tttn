@@ -4,7 +4,7 @@ import 'package:gotta_go/constants/constant.dart';
 import 'package:gotta_go/constants/global.dart';
 import 'package:gotta_go/models/schedule_model.dart';
 import 'package:gotta_go/models/seat_booking_model.dart';
-import 'package:gotta_go/screens/chose_location_screen.dart';
+import 'package:gotta_go/screens/page_screens/home/booking_screens/chose_location_screen.dart';
 
 class SeatSelectionScreen extends StatefulWidget {
   SeatSelectionScreen({super.key, required this.schedule});

@@ -5,7 +5,7 @@ import 'package:gotta_go/constants/constant.dart';
 import 'package:gotta_go/constants/global.dart';
 import 'package:gotta_go/models/schedule_model.dart';
 import 'package:gotta_go/models/seat_booking_model.dart';
-import 'package:gotta_go/screens/booking_information.dart';
+import 'package:gotta_go/screens/page_screens/home/booking_screens/booking_information.dart';
 import 'package:gotta_go/widgets/warning_widget.dart';
 
 class ChoseLocationScreen extends StatefulWidget {
